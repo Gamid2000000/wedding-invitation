@@ -15,7 +15,7 @@ export const TimelineSection: React.FC = () => {
       image: (
         <div className="relative w-full h-48 sm:h-56 rounded-xl overflow-hidden bg-[#241a1c] border border-amber-900/40 group shadow-md">
           <img
-            src="/images/hall-al-aziza.jpg"
+            src={`${import.meta.env.BASE_URL}images/hall-al-aziza.jpg`}
             alt="Зал «Аль Азиза»"
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -48,7 +48,7 @@ export const TimelineSection: React.FC = () => {
       image: (
         <div className="relative w-full h-48 sm:h-56 rounded-xl overflow-hidden bg-[#1c2420] border border-emerald-950/40 group shadow-md">
           <img
-            src="/images/restaurant-gornaya-dolina.jpg"
+            src={`${import.meta.env.BASE_URL}images/restaurant-gornaya-dolina.jpg`}
             alt="Ресторан «Горная Долина»"
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
