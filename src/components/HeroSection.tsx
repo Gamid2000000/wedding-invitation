@@ -10,7 +10,7 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onRsvpClick, onHeartSpawn }) => {
-  const [heroPhoto, setHeroPhoto] = useState('/images/nazim-and-yulduz.jpg');
+  const [heroPhoto, setHeroPhoto] = useState(`${import.meta.env.BASE_URL}images/nazim-and-yulduz.jpg`);
   const scrollY = useScrollPosition();
   const mouseOffset = useMouseParallax(16);
 
@@ -94,7 +94,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRsvpClick, onHeartSp
             <img
               src={heroPhoto}
               alt="Назим и Юлдуз"
-              onError={() => setHeroPhoto('/images/childhood-couple.jpg')}
+              onError={() => setHeroPhoto(`${import.meta.env.BASE_URL}images/childhood-couple.jpg`)}
               className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
             />
 

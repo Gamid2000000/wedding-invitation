@@ -3,7 +3,7 @@ import { Camera } from 'lucide-react';
 import { useScrollPosition } from '../hooks/useParallax';
 
 export const DressCodeSection: React.FC = () => {
-  const [shrekPhoto, setShrekPhoto] = useState('/images/shrek.jpg');
+  const [shrekPhoto, setShrekPhoto] = useState(`${import.meta.env.BASE_URL}images/shrek.jpg`);
   const scrollY = useScrollPosition();
 
   // Load custom photo if saved in localStorage
@@ -83,8 +83,8 @@ export const DressCodeSection: React.FC = () => {
               src={shrekPhoto}
               alt="Идеи для нарядов гостей"
               onError={() => {
-                if (shrekPhoto !== '/images/shrek.jpg') {
-                  setShrekPhoto('/images/shrek.jpg');
+                if (shrekPhoto !== `${import.meta.env.BASE_URL}images/shrek.jpg`) {
+                  setShrekPhoto(`${import.meta.env.BASE_URL}images/shrek.jpg`);
                 }
               }}
               className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-102"

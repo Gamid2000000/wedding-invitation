@@ -13,8 +13,8 @@ export const LocationSection: React.FC = () => {
 
   const venuePhoto =
     activeVenue === 'ceremony'
-      ? '/images/hall-al-aziza.jpg'
-      : '/images/restaurant-gornaya-dolina.jpg';
+      ? `${import.meta.env.BASE_URL}images/hall-al-aziza.jpg`
+      : `${import.meta.env.BASE_URL}images/restaurant-gornaya-dolina.jpg`;
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(`${venue.name}, ${venue.address}, ${WEDDING_DATA.city}`);
