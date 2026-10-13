@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-primary: 'Times New Roman', Times, 'Tinos', 'Cormorant Garamond', Georgia, serif;
+    --font-serif: 'Times New Roman', Times, 'Tinos', 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Calibri', 'Candara', 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-script: 'Marck Script', 'Caveat', cursive;
+    --font-hand: 'Caveat', 'Marck Script', cursive;
+    --font-brunt: 'Brunt', 'Unbounded', 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Support font switching mode (Times New Roman, Calibri / Arial, Brunt) */
+  html[data-font-theme="times"],
+  :root[data-font-theme="times"] {
+    --font-primary: 'Times New Roman', Times, 'Tinos', 'Cormorant Garamond', Georgia, serif;
+  }
+
+  html[data-font-theme="calibri"],
+  :root[data-font-theme="calibri"] {
+    --font-primary: 'Calibri', 'Candara', 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  html[data-font-theme="brunt"],
+  :root[data-font-theme="brunt"] {
+    --font-primary: 'Brunt', 'Unbounded', 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * {
+    font-family: var(--font-primary);
+  }
+
+  body {
+    font-family: var(--font-primary);
+    background-color: #1f1b1c;
+    color: #f7f3ee;
+    letter-spacing: 0.015em;
+    font-weight: 400;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    letter-spacing: 0.025em;
+    font-weight: 600;
+  }
+
+  p, span, button, input, textarea, select, a, label {
+    font-family: var(--font-primary);
+  }
+}
+
+.font-script {
+  font-family: var(--font-script) !important;
+  letter-spacing: 0.01em !important;
+}
+
+.font-hand {
+  font-family: var(--font-hand) !important;
+  letter-spacing: 0.01em !important;
+}
+
+.font-serif-wedding {
+  font-family: var(--font-serif) !important;
+}
+
+.font-sans-wedding {
+  font-family: var(--font-sans) !important;
+}
+
+.font-brunt {
+  font-family: var(--font-brunt) !important;
+}
+
+/* Elegant Countdown Timer digits - clean tabular numbers */
+.countdown-digit {
+  font-family: 'Montserrat', 'Calibri', Arial, sans-serif !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-family: var(--font-primary) !important;
+  letter-spacing: 0.15em;
+  font-weight: 400;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #181516;
+}
+::-webkit-scrollbar-thumb {
+  background: #6d242c;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8b2b35;
+}
+
+/* Subtle heart float animation */
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(0.8) rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-50px) scale(1.1) rotate(10deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120px) scale(0.6) rotate(-10deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-heart {
+  animation: floatUp 3s ease-out forwards;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Smooth Realistic Envelope Wobble Animation */
+@keyframes envelopeGentleShake {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  15% {
+    transform: translate3d(-5px, -1px, 0) rotate(-1.5deg);
+  }
+  30% {
+    transform: translate3d(5px, 1px, 0) rotate(1.5deg);
+  }
+  45% {
+    transform: translate3d(-4px, -1px, 0) rotate(-1deg);
+  }
+  60% {
+    transform: translate3d(4px, 1px, 0) rotate(1deg);
+  }
+  75% {
+    transform: translate3d(-2px, 0, 0) rotate(-0.5deg);
+  }
+  90% {
+    transform: translate3d(1px, 0, 0) rotate(0.3deg);
+  }
+}
+
+.animate-envelope-shake {
+  animation: envelopeGentleShake 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Envelope Flap 3D Geometry and Fold Animation */
+.envelope-perspective {
+  perspective: 2000px;
+  perspective-origin: 50% 0%;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.envelope-flap-hinge {
+  transform-origin: 50% 0%;
+  transition: transform 950ms cubic-bezier(0.34, 1, 0.64, 1);
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.envelope-flap-closed {
+  transform: rotateX(0deg);
+}
+
+.envelope-flap-open {
+  transform: rotateX(180deg);
+}
+
+@keyframes progressFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Brunt display font (served from /public/fonts) */
+@font-face {
+  font-family: 'Brunt';
+  src: url('/fonts/brunt.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
