@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { WEDDING_DATA } from '../data/weddingData';
-import { X, Heart, CheckCircle2, Send, QrCode, Share2, User } from 'lucide-react';
+import { X, Heart, CheckCircle2, QrCode, User } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { saveRsvp } from '../lib/rsvpStore';
 
 interface RsvpModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
   const [guestCount, setGuestCount] = useState(1);
   const [wishes, setWishes] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [savedData, setSavedData] = useState<GuestResponse | null>(null);
 
   // Load existing RSVP from localStorage if any
@@ -46,7 +48,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
@@ -59,18 +61,14 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
       submittedAt: new Date().toISOString(),
     };
 
-    localStorage.setItem('nazim_yulduz_rsvp', JSON.stringify(response));
-
-    // Also update all RSVPs list for the couple's dashboard
     try {
-      const existingListStr = localStorage.getItem('nazim_yulduz_all_rsvps') || '[]';
-      const list: GuestResponse[] = JSON.parse(existingListStr);
-      const filtered = list.filter((item) => item.name.toLowerCase() !== response.name.toLowerCase());
-      filtered.push(response);
-      localStorage.setItem('nazim_yulduz_all_rsvps', JSON.stringify(filtered));
-    } catch (err) {
-      // ignore
+      await saveRsvp(response);
+    } catch {
+      setSubmitError(true);
+      return;
     }
+    setSubmitError(false);
+    localStorage.setItem('nazim_yulduz_rsvp', JSON.stringify(response));
 
     setSavedData(response);
     setIsSubmitted(true);
@@ -81,28 +79,6 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
       origin: { y: 0.6 },
       colors: ['#c24141', '#e11d48', '#fbbf24', '#ffffff'],
     });
-  };
-
-  const generateShareText = () => {
-    if (!savedData) return '';
-    const statusText =
-      savedData.attending === 'yes'
-        ? 'Я приду с удовольствием! 🎉'
-        : savedData.attending === 'plus_one'
-        ? `Приду не один (${savedData.partnerName || 'вместе'})! 🥂`
-        : 'К сожалению, не смогу присутствовать 💌';
-
-    return `Привет, Назим и Юлдуз! ❤️\nМеня зовут: ${savedData.name}\nОтвет на приглашение: ${statusText}${savedData.wishes ? `\nПожелание: ${savedData.wishes}` : ''}`;
-  };
-
-  const openWhatsApp = () => {
-    const text = encodeURIComponent(generateShareText());
-    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
-  };
-
-  const openTelegram = () => {
-    const text = encodeURIComponent(generateShareText());
-    window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank');
   };
 
   return (
@@ -216,6 +192,12 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
+            {submitError && (
+              <p className="text-xs text-rose-300 text-center">
+                Не удалось отправить ответ. Проверьте интернет и попробуйте ещё раз.
+              </p>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -274,29 +256,6 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             )}
-
-            {/* Direct Send via WhatsApp / Telegram */}
-            <div className="space-y-2 pt-2">
-              <p className="text-xs text-stone-400">
-                Отправьте подтверждение молодожёнам напрямую:
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={openWhatsApp}
-                  className="py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Share2 className="w-3.5 h-3.5" />
-                  <span>В WhatsApp</span>
-                </button>
-                <button
-                  onClick={openTelegram}
-                  className="py-2.5 px-3 rounded-xl bg-sky-700 hover:bg-sky-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>В Telegram</span>
-                </button>
-              </div>
-            </div>
 
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
