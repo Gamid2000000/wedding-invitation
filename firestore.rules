@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /rsvps/{id} {
+      allow read: if true;
+      allow create, update: if request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 100
+        && (!('wishes' in request.resource.data)
+            || (request.resource.data.wishes is string && request.resource.data.wishes.size() <= 1000));
+      allow delete: if false;
+    }
+  }
+}

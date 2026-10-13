@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { WEDDING_DATA } from '../data/weddingData';
 import { X, Heart, CheckCircle2, QrCode, User } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { saveRsvp } from '../lib/rsvpStore';
 
 interface RsvpModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
   const [guestCount, setGuestCount] = useState(1);
   const [wishes, setWishes] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [savedData, setSavedData] = useState<GuestResponse | null>(null);
 
   // Load existing RSVP from localStorage if any
@@ -46,7 +48,7 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
@@ -59,18 +61,14 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
       submittedAt: new Date().toISOString(),
     };
 
-    localStorage.setItem('nazim_yulduz_rsvp', JSON.stringify(response));
-
-    // Also update all RSVPs list for the couple's dashboard
     try {
-      const existingListStr = localStorage.getItem('nazim_yulduz_all_rsvps') || '[]';
-      const list: GuestResponse[] = JSON.parse(existingListStr);
-      const filtered = list.filter((item) => item.name.toLowerCase() !== response.name.toLowerCase());
-      filtered.push(response);
-      localStorage.setItem('nazim_yulduz_all_rsvps', JSON.stringify(filtered));
-    } catch (err) {
-      // ignore
+      await saveRsvp(response);
+    } catch {
+      setSubmitError(true);
+      return;
     }
+    setSubmitError(false);
+    localStorage.setItem('nazim_yulduz_rsvp', JSON.stringify(response));
 
     setSavedData(response);
     setIsSubmitted(true);
@@ -193,6 +191,12 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
                 className="w-full px-4 py-2 rounded-xl bg-[#1b1517] border border-white/10 focus:border-rose-500 focus:outline-none text-xs text-white placeholder-stone-500"
               />
             </div>
+
+            {submitError && (
+              <p className="text-xs text-rose-300 text-center">
+                Не удалось отправить ответ. Проверьте интернет и попробуйте ещё раз.
+              </p>
+            )}
 
             {/* Submit Button */}
             <button

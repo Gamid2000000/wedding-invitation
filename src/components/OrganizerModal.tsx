@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { GuestResponse } from './RsvpModal';
-import { X, Users, Check, Download, Trash2, ShieldCheck } from 'lucide-react';
+import { X, Download, ShieldCheck } from 'lucide-react';
+import { subscribeRsvps } from '../lib/rsvpStore';
 
 export const OrganizerModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   isOpen,
   onClose,
 }) => {
   const [guestList, setGuestList] = useState<GuestResponse[]>([]);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      try {
-        const stored = localStorage.getItem('nazim_yulduz_all_rsvps') || '[]';
-        setGuestList(JSON.parse(stored));
-      } catch (e) {
-        setGuestList([]);
-      }
-    }
+    if (!isOpen) return;
+    setLoadError(false);
+    return subscribeRsvps(setGuestList, () => setLoadError(true));
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -47,13 +44,6 @@ export const OrganizerModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const clearList = () => {
-    if (window.confirm('Очистить список ответов?')) {
-      localStorage.removeItem('nazim_yulduz_all_rsvps');
-      setGuestList([]);
-    }
   };
 
   return (
@@ -97,7 +87,7 @@ export const OrganizerModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
           <div className="max-h-72 overflow-y-auto rounded-xl border border-white/10 bg-[#1e1719] divide-y divide-white/5">
             {guestList.length === 0 ? (
               <div className="p-8 text-center text-xs text-stone-400">
-                Пока нет сохранённых ответов от гостей.
+                {loadError ? 'Не удалось загрузить ответы.' : 'Пока нет сохранённых ответов от гостей.'}
               </div>
             ) : (
               guestList.map((g, i) => (
@@ -140,16 +130,6 @@ export const OrganizerModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
               <Download className="w-3.5 h-3.5" />
               <span>Скачать в Excel (.csv)</span>
             </button>
-
-            {guestList.length > 0 && (
-              <button
-                onClick={clearList}
-                className="px-3 py-2 text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Очистить</span>
-              </button>
-            )}
           </div>
         </div>
       </div>
