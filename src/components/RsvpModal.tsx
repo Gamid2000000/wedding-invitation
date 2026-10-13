@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { WEDDING_DATA } from '../data/weddingData';
-import { X, Heart, CheckCircle2, Send, QrCode, Share2, User } from 'lucide-react';
+import { X, Heart, CheckCircle2, QrCode, User } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface RsvpModalProps {
@@ -81,28 +81,6 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
       origin: { y: 0.6 },
       colors: ['#c24141', '#e11d48', '#fbbf24', '#ffffff'],
     });
-  };
-
-  const generateShareText = () => {
-    if (!savedData) return '';
-    const statusText =
-      savedData.attending === 'yes'
-        ? 'Я приду с удовольствием! 🎉'
-        : savedData.attending === 'plus_one'
-        ? `Приду не один (${savedData.partnerName || 'вместе'})! 🥂`
-        : 'К сожалению, не смогу присутствовать 💌';
-
-    return `Привет, Назим и Юлдуз! ❤️\nМеня зовут: ${savedData.name}\nОтвет на приглашение: ${statusText}${savedData.wishes ? `\nПожелание: ${savedData.wishes}` : ''}`;
-  };
-
-  const openWhatsApp = () => {
-    const text = encodeURIComponent(generateShareText());
-    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
-  };
-
-  const openTelegram = () => {
-    const text = encodeURIComponent(generateShareText());
-    window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank');
   };
 
   return (
@@ -274,29 +252,6 @@ export const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             )}
-
-            {/* Direct Send via WhatsApp / Telegram */}
-            <div className="space-y-2 pt-2">
-              <p className="text-xs text-stone-400">
-                Отправьте подтверждение молодожёнам напрямую:
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={openWhatsApp}
-                  className="py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Share2 className="w-3.5 h-3.5" />
-                  <span>В WhatsApp</span>
-                </button>
-                <button
-                  onClick={openTelegram}
-                  className="py-2.5 px-3 rounded-xl bg-sky-700 hover:bg-sky-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>В Telegram</span>
-                </button>
-              </div>
-            </div>
 
             <div className="flex items-center justify-center gap-3 pt-2">
               <button

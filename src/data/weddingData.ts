@@ -29,7 +29,6 @@ export const WEDDING_DATA = {
   monthName: 'Декабрь',
   city: 'Махачкала',
   hashtag: '#НазимИЮлдуз2026',
-  organizerPhone: '+79990000000', // for WhatsApp quick share
   
   invitationText: {
     headline: 'ДОРОГИЕ И БЛИЗКИЕ',
